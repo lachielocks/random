@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowRight, BookOpen, Brain, Terminal, Dice6, Cookie, Star, MessageSquareWarning, Scroll, Waves, Medal } from "lucide-react";
+import { ArrowRight, BookOpen, Brain, Terminal, Cookie, Dice6, Star, MessageSquareWarning, Scroll, Waves, Medal } from "lucide-react";
 import { RotatingTagline } from "@/components/RotatingTagline";
 import { useBadges, ALL_BADGES } from "@/context/BadgeContext";
 
@@ -11,7 +11,7 @@ const tools = [
     href: "/excuses",
     Icon: BookOpen,
     title: "School Excuse Generator",
-    description: "Generate increasingly ridiculous excuses for not doing your homework. Completely useless. Completely necessary.",
+    description: "Professionally crafted excuses for not doing your homework. 250+ options.",
     color: "from-yellow-400 to-orange-500",
     bg: "bg-yellow-50 hover:bg-yellow-100",
     border: "border-yellow-200",
@@ -20,7 +20,7 @@ const tools = [
     href: "/facts",
     Icon: Brain,
     title: "Useless Facts",
-    description: "Facts that will fill your brain with things you'll never need but also never forget.",
+    description: "Facts you'll never need but will never forget. Bananas are berries.",
     color: "from-blue-400 to-cyan-500",
     bg: "bg-blue-50 hover:bg-blue-100",
     border: "border-blue-200",
@@ -34,15 +34,60 @@ const tools = [
     bg: "bg-green-50 hover:bg-green-100",
     border: "border-green-200",
   },
-];
-
-const comingSoon = [
-  { Icon: Dice6, title: "Random Decision Maker", description: "Let fate decide so you don't have to." },
-  { Icon: Cookie, title: "Fortune Cookie Machine", description: "Wisdom you didn't ask for but definitely needed." },
-  { Icon: Star, title: "Cheese Rating Scale", description: "Rank cheeses on an entirely subjective scale." },
-  { Icon: MessageSquareWarning, title: "Complaint Generator", description: "Articulate your feelings about absolutely anything." },
-  { Icon: Scroll, title: "Fake History Facts", description: "Plausible but entirely made up historical trivia." },
-  { Icon: Waves, title: "Vibe Checker", description: "What's your vibe today? This tool knows." },
+  {
+    href: "/fortune",
+    Icon: Cookie,
+    title: "Fortune Cookie Machine",
+    description: "Crack open a cookie. Receive wisdom you didn't ask for but definitely needed.",
+    color: "from-amber-400 to-yellow-500",
+    bg: "bg-amber-50 hover:bg-amber-100",
+    border: "border-amber-200",
+  },
+  {
+    href: "/decisions",
+    Icon: Dice6,
+    title: "Random Decision Maker",
+    description: "Add your options. Let fate decide. Blame fate when it goes wrong.",
+    color: "from-violet-500 to-purple-600",
+    bg: "bg-violet-50 hover:bg-violet-100",
+    border: "border-violet-200",
+  },
+  {
+    href: "/cheese",
+    Icon: Star,
+    title: "Cheese Rating Scale",
+    description: "Pompous AI-generated reviews of cheeses. Rate them on a rigorous scale.",
+    color: "from-yellow-500 to-lime-500",
+    bg: "bg-lime-50 hover:bg-lime-100",
+    border: "border-lime-200",
+  },
+  {
+    href: "/complaints",
+    Icon: MessageSquareWarning,
+    title: "Complaint Generator",
+    description: "Formally articulate your grievances about printers, weather, and other enemies.",
+    color: "from-red-400 to-rose-500",
+    bg: "bg-red-50 hover:bg-red-100",
+    border: "border-red-200",
+  },
+  {
+    href: "/history",
+    Icon: Scroll,
+    title: "Fake History Facts",
+    description: "Plausible. Detailed. Completely made up. Do not cite in essays.",
+    color: "from-stone-500 to-amber-700",
+    bg: "bg-stone-50 hover:bg-stone-100",
+    border: "border-stone-200",
+  },
+  {
+    href: "/vibe",
+    Icon: Waves,
+    title: "Vibe Checker",
+    description: "What's your vibe today? The machine knows. Results may vary.",
+    color: "from-pink-400 to-fuchsia-500",
+    bg: "bg-pink-50 hover:bg-pink-100",
+    border: "border-pink-200",
+  },
 ];
 
 const cardVariants = {
@@ -50,7 +95,7 @@ const cardVariants = {
   show: (i: number) => ({
     opacity: 1,
     y: 0,
-    transition: { delay: i * 0.07, duration: 0.3, ease: "easeOut" as const },
+    transition: { delay: i * 0.05, duration: 0.3, ease: "easeOut" as const },
   }),
 };
 
@@ -83,48 +128,32 @@ export default function Home() {
           )}
         </div>
 
-        {/* Live tools */}
-        <section className="mb-14">
-          <h2 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4 pl-1">Available now</h2>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {tools.map((tool, i) => (
-              <motion.div key={tool.href} custom={i} variants={cardVariants} initial="hidden" animate="show">
-                <Link
-                  href={tool.href}
-                  className={`group relative flex flex-col p-6 rounded-2xl border-2 ${tool.border} ${tool.bg} transition-all duration-200 hover:shadow-lg hover:-translate-y-1`}
-                >
-                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${tool.color} flex items-center justify-center mb-4 shadow-sm`}>
-                    <tool.Icon size={22} className="text-white" />
-                  </div>
-                  <h3 className="font-bold text-gray-900 text-lg mb-1 group-hover:text-gray-700">{tool.title}</h3>
-                  <p className="text-gray-500 text-sm leading-relaxed flex-1">{tool.description}</p>
-                  <div className="mt-4 flex items-center gap-1 text-sm font-semibold text-gray-700 group-hover:text-gray-900">
-                    Open <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
-                  </div>
-                </Link>
-              </motion.div>
-            ))}
-          </div>
-        </section>
-
-        {/* Coming soon */}
-        <section>
-          <h2 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4 pl-1">Coming eventually, probably</h2>
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {comingSoon.map((item) => (
-              <div
-                key={item.title}
-                className="flex items-start gap-4 p-5 rounded-2xl bg-white border-2 border-dashed border-gray-200 opacity-60"
+        {/* Tools grid */}
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {tools.map((tool, i) => (
+            <motion.div
+              key={tool.href}
+              custom={i}
+              variants={cardVariants}
+              initial="hidden"
+              animate="show"
+            >
+              <Link
+                href={tool.href}
+                className={`group relative flex flex-col p-6 rounded-2xl border-2 ${tool.border} ${tool.bg} transition-all duration-200 hover:shadow-lg hover:-translate-y-1`}
               >
-                <item.Icon size={22} className="text-gray-400 mt-0.5 shrink-0" />
-                <div>
-                  <h3 className="font-semibold text-gray-700 text-sm">{item.title}</h3>
-                  <p className="text-gray-400 text-xs mt-0.5 leading-snug">{item.description}</p>
+                <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${tool.color} flex items-center justify-center mb-4 shadow-sm`}>
+                  <tool.Icon size={22} className="text-white" />
                 </div>
-              </div>
-            ))}
-          </div>
-        </section>
+                <h3 className="font-bold text-gray-900 text-lg mb-1 group-hover:text-gray-700">{tool.title}</h3>
+                <p className="text-gray-500 text-sm leading-relaxed flex-1">{tool.description}</p>
+                <div className="mt-4 flex items-center gap-1 text-sm font-semibold text-gray-700 group-hover:text-gray-900">
+                  Open <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                </div>
+              </Link>
+            </motion.div>
+          ))}
+        </div>
 
         <footer className="text-center mt-20 text-gray-400 text-sm">
           Made with questionable priorities.{" "}

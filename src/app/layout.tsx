@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { BadgeProvider } from "@/context/BadgeContext";
 import { BadgeNotification } from "@/components/BadgeNotification";
-import { PageTransition } from "@/components/PageTransition";
 
 export const metadata: Metadata = {
   title: "Random Stuff",
@@ -18,7 +17,7 @@ export default function RootLayout({
     <html lang="en" className="h-full antialiased">
       <body className="min-h-full flex flex-col">
         <BadgeProvider>
-          <PageTransition>{children}</PageTransition>
+          {children}
           <BadgeNotification />
         </BadgeProvider>
       </body>
