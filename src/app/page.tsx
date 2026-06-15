@@ -2,13 +2,14 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { ArrowRight, BookOpen, Brain, Dice6, Cookie, Star, MessageSquareWarning, Scroll, Waves, Medal } from "lucide-react";
 import { RotatingTagline } from "@/components/RotatingTagline";
 import { useBadges, ALL_BADGES } from "@/context/BadgeContext";
 
 const tools = [
   {
     href: "/excuses",
-    emoji: "📝",
+    Icon: BookOpen,
     title: "School Excuse Generator",
     description: "Generate increasingly ridiculous excuses for not doing your homework. Completely useless. Completely necessary.",
     color: "from-yellow-400 to-orange-500",
@@ -17,7 +18,7 @@ const tools = [
   },
   {
     href: "/facts",
-    emoji: "🧠",
+    Icon: Brain,
     title: "Useless Facts",
     description: "Facts that will fill your brain with things you'll never need but also never forget.",
     color: "from-blue-400 to-cyan-500",
@@ -27,12 +28,12 @@ const tools = [
 ];
 
 const comingSoon = [
-  { emoji: "🎲", title: "Random Decision Maker", description: "Let fate decide so you don't have to." },
-  { emoji: "🔮", title: "Fortune Cookie Machine", description: "Wisdom you didn't ask for but definitely needed." },
-  { emoji: "🧀", title: "Cheese Rating Scale", description: "Rank cheeses on an entirely subjective scale." },
-  { emoji: "😤", title: "Complaint Generator", description: "Articulate your feelings about absolutely anything." },
-  { emoji: "📜", title: "Fake History Facts", description: "Plausible but entirely made up historical trivia." },
-  { emoji: "🌈", title: "Vibe Checker", description: "What's your vibe today? This tool knows." },
+  { Icon: Dice6, title: "Random Decision Maker", description: "Let fate decide so you don't have to." },
+  { Icon: Cookie, title: "Fortune Cookie Machine", description: "Wisdom you didn't ask for but definitely needed." },
+  { Icon: Star, title: "Cheese Rating Scale", description: "Rank cheeses on an entirely subjective scale." },
+  { Icon: MessageSquareWarning, title: "Complaint Generator", description: "Articulate your feelings about absolutely anything." },
+  { Icon: Scroll, title: "Fake History Facts", description: "Plausible but entirely made up historical trivia." },
+  { Icon: Waves, title: "Vibe Checker", description: "What's your vibe today? This tool knows." },
 ];
 
 const cardVariants = {
@@ -62,14 +63,13 @@ export default function Home() {
           </h1>
           <RotatingTagline />
 
-          {/* Badge counter */}
           {foundCount > 0 && (
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               className="mt-6 inline-flex items-center gap-2 bg-purple-100 text-purple-700 text-sm font-semibold px-4 py-2 rounded-full"
             >
-              🏅 {foundCount}/{totalBadges} secret badges found
+              <Medal size={14} /> {foundCount}/{totalBadges} secret badges found
             </motion.div>
           )}
         </div>
@@ -79,24 +79,18 @@ export default function Home() {
           <h2 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4 pl-1">Available now</h2>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {tools.map((tool, i) => (
-              <motion.div
-                key={tool.href}
-                custom={i}
-                variants={cardVariants}
-                initial="hidden"
-                animate="show"
-              >
+              <motion.div key={tool.href} custom={i} variants={cardVariants} initial="hidden" animate="show">
                 <Link
                   href={tool.href}
                   className={`group relative flex flex-col p-6 rounded-2xl border-2 ${tool.border} ${tool.bg} transition-all duration-200 hover:shadow-lg hover:-translate-y-1`}
                 >
-                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${tool.color} flex items-center justify-center text-2xl mb-4 shadow-sm`}>
-                    {tool.emoji}
+                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${tool.color} flex items-center justify-center mb-4 shadow-sm`}>
+                    <tool.Icon size={22} className="text-white" />
                   </div>
                   <h3 className="font-bold text-gray-900 text-lg mb-1 group-hover:text-gray-700">{tool.title}</h3>
                   <p className="text-gray-500 text-sm leading-relaxed flex-1">{tool.description}</p>
-                  <div className="mt-4 flex items-center text-sm font-semibold text-gray-700 group-hover:text-gray-900">
-                    Open <span className="ml-1 group-hover:translate-x-1 transition-transform inline-block">→</span>
+                  <div className="mt-4 flex items-center gap-1 text-sm font-semibold text-gray-700 group-hover:text-gray-900">
+                    Open <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
                   </div>
                 </Link>
               </motion.div>
@@ -113,7 +107,7 @@ export default function Home() {
                 key={item.title}
                 className="flex items-start gap-4 p-5 rounded-2xl bg-white border-2 border-dashed border-gray-200 opacity-60"
               >
-                <span className="text-2xl mt-0.5">{item.emoji}</span>
+                <item.Icon size={22} className="text-gray-400 mt-0.5 shrink-0" />
                 <div>
                   <h3 className="font-semibold text-gray-700 text-sm">{item.title}</h3>
                   <p className="text-gray-400 text-xs mt-0.5 leading-snug">{item.description}</p>

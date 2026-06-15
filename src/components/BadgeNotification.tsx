@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { Trophy } from "lucide-react";
 import { useBadges } from "@/context/BadgeContext";
 
 export function BadgeNotification() {
@@ -26,7 +27,9 @@ export function BadgeNotification() {
           >
             <span className="text-4xl">{newBadge.emoji}</span>
             <div>
-              <div className="text-xs font-bold text-purple-500 uppercase tracking-widest mb-0.5">Badge Unlocked!</div>
+              <div className="flex items-center gap-1 text-xs font-bold text-purple-500 uppercase tracking-widest mb-0.5">
+                <Trophy size={11} /> Badge Unlocked!
+              </div>
               <div className="font-bold text-gray-900 text-sm">{newBadge.name}</div>
               <div className="text-xs text-gray-400 mt-0.5">{newBadge.description}</div>
             </div>

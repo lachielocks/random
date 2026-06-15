@@ -3,14 +3,15 @@
 import { useState, useCallback } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
+import { ArrowLeft, Shuffle, Clipboard, ClipboardCheck, BookOpen, Gamepad2 } from "lucide-react";
 import { excuses } from "@/data/excuses";
 import { gamerExcuses } from "@/data/gamer-excuses";
 
 type Tab = "school" | "gamer";
 
-const tabs: { id: Tab; label: string; emoji: string }[] = [
-  { id: "school", label: "School", emoji: "📝" },
-  { id: "gamer", label: "Gamer", emoji: "🎮" },
+const tabs: { id: Tab; label: string; Icon: React.ElementType }[] = [
+  { id: "school", label: "School", Icon: BookOpen },
+  { id: "gamer", label: "Gamer", Icon: Gamepad2 },
 ];
 
 const config = {
@@ -19,7 +20,7 @@ const config = {
     badgeColor: "text-orange-500 border-orange-200",
     title: "School Excuse Generator",
     subtitle: "Professionally crafted excuses for not doing your homework.",
-    buttonLabel: "🎲 Generate Excuse",
+    buttonLabel: "Generate Excuse",
     buttonClass: "bg-orange-500 hover:bg-orange-600 shadow-orange-200",
     cardBorder: "border-orange-100",
     gradient: "from-yellow-50 via-orange-50 to-red-50",
@@ -31,7 +32,7 @@ const config = {
     badgeColor: "text-green-600 border-green-200",
     title: "Gamer Excuse Generator",
     subtitle: "It wasn't your fault. It never is.",
-    buttonLabel: "🎮 Generate Excuse",
+    buttonLabel: "Generate Excuse",
     buttonClass: "bg-green-500 hover:bg-green-600 shadow-green-200",
     cardBorder: "border-green-100",
     gradient: "from-green-50 via-emerald-50 to-teal-50",
@@ -47,10 +48,7 @@ function getRandom(pool: string[], current: string): string {
 
 export default function ExcusesPage() {
   const [tab, setTab] = useState<Tab>("school");
-  const [excuse, setExcuse] = useState<string>(() => {
-    const p = excuses;
-    return p[Math.floor(Math.random() * p.length)];
-  });
+  const [excuse, setExcuse] = useState<string>(() => excuses[Math.floor(Math.random() * excuses.length)]);
   const [excuseKey, setExcuseKey] = useState(0);
   const [copied, setCopied] = useState(false);
 
@@ -79,11 +77,8 @@ export default function ExcusesPage() {
   return (
     <main className={`min-h-screen bg-gradient-to-br ${cfg.gradient} flex flex-col transition-all duration-500`}>
       <div className="px-6 pt-6">
-        <Link
-          href="/"
-          className="inline-flex items-center gap-2 text-sm font-semibold text-gray-500 hover:text-gray-800 transition-colors"
-        >
-          ← Back to Random Stuff
+        <Link href="/" className="inline-flex items-center gap-2 text-sm font-semibold text-gray-500 hover:text-gray-800 transition-colors">
+          <ArrowLeft size={14} /> Back to Random Stuff
         </Link>
       </div>
 
@@ -95,7 +90,7 @@ export default function ExcusesPage() {
               <button
                 key={t.id}
                 onClick={() => switchTab(t.id)}
-                className={`relative px-5 py-2 rounded-xl text-sm font-bold transition-all duration-200 ${
+                className={`relative flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-bold transition-all duration-200 ${
                   tab === t.id ? "text-gray-900" : "text-gray-400 hover:text-gray-600"
                 }`}
               >
@@ -106,7 +101,9 @@ export default function ExcusesPage() {
                     transition={{ type: "spring", stiffness: 500, damping: 35 }}
                   />
                 )}
-                <span className="relative">{t.emoji} {t.label}</span>
+                <span className="relative flex items-center gap-2">
+                  <t.Icon size={14} /> {t.label}
+                </span>
               </button>
             ))}
           </div>
@@ -119,16 +116,12 @@ export default function ExcusesPage() {
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.2 }}
             >
-              {/* Badge */}
               <div className={`inline-block bg-white border-2 ${cfg.badgeColor} rounded-full px-4 py-1 mb-6 shadow-sm`}>
                 <span className={`text-xs font-bold ${cfg.badgeColor.split(" ")[0]} tracking-widest uppercase`}>
                   {cfg.badge}
                 </span>
               </div>
-
-              <h1 className="text-4xl sm:text-5xl font-black text-gray-900 mb-3 tracking-tight">
-                {cfg.title}
-              </h1>
+              <h1 className="text-4xl sm:text-5xl font-black text-gray-900 mb-3 tracking-tight">{cfg.title}</h1>
               <p className="text-gray-500 mb-10 text-lg">
                 {cfg.subtitle}{" "}
                 <span className="text-gray-400 text-base">{cfg.pool.length} to choose from.</span>
@@ -138,9 +131,7 @@ export default function ExcusesPage() {
 
           {/* Excuse card */}
           <div className={`relative bg-white rounded-3xl shadow-xl border-2 ${cfg.cardBorder} p-8 sm:p-12 mb-8 min-h-[140px] flex items-center justify-center`}>
-            <div className="absolute top-6 left-8 text-7xl text-gray-50 font-serif leading-none select-none" aria-hidden>
-              &ldquo;
-            </div>
+            <div className="absolute top-6 left-8 text-7xl text-gray-50 font-serif leading-none select-none" aria-hidden>&ldquo;</div>
             <AnimatePresence mode="wait">
               <motion.p
                 key={excuseKey}
@@ -162,14 +153,14 @@ export default function ExcusesPage() {
               onClick={next}
               className={`w-full sm:w-auto flex items-center justify-center gap-2 ${cfg.buttonClass} text-white font-bold px-8 py-4 rounded-2xl text-lg shadow-lg transition-colors duration-150`}
             >
-              {cfg.buttonLabel}
+              <Shuffle size={18} /> {cfg.buttonLabel}
             </motion.button>
             <motion.button
               whileTap={{ scale: 0.96 }}
               onClick={copy}
               className="w-full sm:w-auto flex items-center justify-center gap-2 bg-white hover:bg-gray-50 text-gray-700 font-semibold px-8 py-4 rounded-2xl text-lg border-2 border-gray-200 transition-colors duration-150"
             >
-              {copied ? "✓ Copied!" : "📋 Copy"}
+              {copied ? <><ClipboardCheck size={18} /> Copied!</> : <><Clipboard size={18} /> Copy</>}
             </motion.button>
           </div>
 

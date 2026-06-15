@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { ArrowLeft, BadgeCheck } from "lucide-react";
 import { useBadges, ALL_BADGES } from "@/context/BadgeContext";
 
 interface Props {
@@ -43,17 +44,16 @@ export function SecretPage({ badgeId, title, description, flavourText, bg }: Pro
           transition={{ delay: 0.25, duration: 0.3 }}
         >
           {show && !alreadyHad && (
-            <div className="inline-block bg-white border-2 border-purple-200 rounded-full px-4 py-1 mb-5 shadow-sm">
+            <div className="inline-flex items-center gap-2 bg-white border-2 border-purple-200 rounded-full px-4 py-1 mb-5 shadow-sm">
+              <BadgeCheck size={13} className="text-purple-500" />
               <span className="text-xs font-bold text-purple-500 tracking-widest uppercase">
-                🏅 Badge Unlocked: {badge?.name}
+                Badge Unlocked: {badge?.name}
               </span>
             </div>
           )}
           {show && alreadyHad && (
             <div className="inline-block bg-white border-2 border-gray-200 rounded-full px-4 py-1 mb-5 shadow-sm">
-              <span className="text-xs font-bold text-gray-400 tracking-widest uppercase">
-                Already found this one.
-              </span>
+              <span className="text-xs font-bold text-gray-400 tracking-widest uppercase">Already found this one.</span>
             </div>
           )}
 
@@ -66,11 +66,8 @@ export function SecretPage({ badgeId, title, description, flavourText, bg }: Pro
             ))}
           </div>
 
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 text-sm font-semibold text-gray-500 hover:text-gray-800 transition-colors"
-          >
-            ← Back to Random Stuff
+          <Link href="/" className="inline-flex items-center gap-2 text-sm font-semibold text-gray-500 hover:text-gray-800 transition-colors">
+            <ArrowLeft size={14} /> Back to Random Stuff
           </Link>
         </motion.div>
       </div>
