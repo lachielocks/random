@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowRight, BookOpen, Brain, Dice6, Cookie, Star, MessageSquareWarning, Scroll, Waves, Medal } from "lucide-react";
+import { ArrowRight, BookOpen, Brain, Terminal, Dice6, Cookie, Star, MessageSquareWarning, Scroll, Waves, Medal } from "lucide-react";
 import { RotatingTagline } from "@/components/RotatingTagline";
 import { useBadges, ALL_BADGES } from "@/context/BadgeContext";
 
@@ -24,6 +24,15 @@ const tools = [
     color: "from-blue-400 to-cyan-500",
     bg: "bg-blue-50 hover:bg-blue-100",
     border: "border-blue-200",
+  },
+  {
+    href: "/hacker",
+    Icon: Terminal,
+    title: "Fake Hacker Mode",
+    description: "Type random keys. Look like a movie hacker. Feel unstoppable.",
+    color: "from-green-500 to-emerald-700",
+    bg: "bg-green-50 hover:bg-green-100",
+    border: "border-green-200",
   },
 ];
 
