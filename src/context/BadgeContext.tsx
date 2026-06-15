@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect, useCallback, useRef } from "react";
+import { createContext, useContext, useState, useEffect, useCallback } from "react";
 
 export interface Badge {
   id: string;
@@ -10,21 +10,21 @@ export interface Badge {
 }
 
 export const ALL_BADGES: Record<string, Badge> = {
-  banana: { id: "banana", name: "Banana Republic", emoji: "🍌", description: "You found the banana page." },
-  secret: { id: "secret", name: "Secret Agent", emoji: "🕵️", description: "You found the secret." },
-  "totally-not-a-secret": { id: "totally-not-a-secret", name: "Definitely Not Suspicious", emoji: "👀", description: "Nothing to see here." },
-  "council-of-ducks": { id: "council-of-ducks", name: "Council Member", emoji: "🦆", description: "You have been initiated into the Council." },
+  banana:               { id: "banana",               name: "Banana Republic",          emoji: "🍌", description: "You found the banana page." },
+  secret:               { id: "secret",               name: "Secret Agent",             emoji: "🕵️", description: "You found the secret." },
+  "totally-not-a-secret":{ id: "totally-not-a-secret", name: "Definitely Not Suspicious", emoji: "👀", description: "Nothing to see here." },
+  "council-of-ducks":   { id: "council-of-ducks",     name: "Council Member",           emoji: "🦆", description: "You have been initiated into the Council." },
 };
 
 interface BadgeContextValue {
-  unlocked: Set<string>;
+  unlockedIds: string[];
   unlock: (id: string) => void;
   newBadge: Badge | null;
   clearNew: () => void;
 }
 
 const BadgeContext = createContext<BadgeContextValue>({
-  unlocked: new Set(),
+  unlockedIds: [],
   unlock: () => {},
   newBadge: null,
   clearNew: () => {},
@@ -33,39 +33,40 @@ const BadgeContext = createContext<BadgeContextValue>({
 const STORAGE_KEY = "random-stuff-badges";
 
 export function BadgeProvider({ children }: { children: React.ReactNode }) {
-  const [unlocked, setUnlocked] = useState<Set<string>>(new Set());
+  const [unlockedIds, setUnlockedIds] = useState<string[]>([]);
   const [newBadge, setNewBadge] = useState<Badge | null>(null);
-  const loaded = useRef(false);
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    if (loaded.current) return;
-    loaded.current = true;
     try {
-      const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? "[]");
-      setUnlocked(new Set(stored));
+      const stored: string[] = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? "[]");
+      setUnlockedIds(stored);
     } catch {
       // ignore
     }
+    setLoaded(true);
   }, []);
 
   const unlock = useCallback((id: string) => {
-    setUnlocked((prev) => {
-      if (prev.has(id)) return prev;
-      const next = new Set(prev);
-      next.add(id);
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify([...next]));
-      } catch {}
-      const badge = ALL_BADGES[id];
-      if (badge) setNewBadge(badge);
+    if (!loaded) return;
+    setUnlockedIds((prev) => {
+      if (prev.includes(id)) return prev;
+      const next = [...prev, id];
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(next)); } catch {}
       return next;
     });
-  }, []);
+    // Trigger newBadge notification separately — never inside a state updater
+    setNewBadge((current) => {
+      if (current) return current; // don't overwrite an unread badge
+      const badge = ALL_BADGES[id];
+      return badge ?? null;
+    });
+  }, [loaded]);
 
   const clearNew = useCallback(() => setNewBadge(null), []);
 
   return (
-    <BadgeContext.Provider value={{ unlocked, unlock, newBadge, clearNew }}>
+    <BadgeContext.Provider value={{ unlockedIds, unlock, newBadge, clearNew }}>
       {children}
     </BadgeContext.Provider>
   );

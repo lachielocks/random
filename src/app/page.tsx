@@ -2,11 +2,13 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { useState } from "react";
 import {
   ArrowRight, BookOpen, Brain, Terminal, Cookie, Dice6, Star,
   MessageSquareWarning, Scroll, Waves, Medal, UserRound, Monitor, MousePointer, Bird,
 } from "lucide-react";
 import { RotatingTagline } from "@/components/RotatingTagline";
+import { BadgeModal } from "@/components/BadgeModal";
 import { useBadges, ALL_BADGES } from "@/context/BadgeContext";
 
 const tools = [
@@ -34,9 +36,10 @@ const cardVariants = {
 };
 
 export default function Home() {
-  const { unlocked } = useBadges();
+  const { unlockedIds } = useBadges();
+  const [showBadges, setShowBadges] = useState(false);
   const totalBadges = Object.keys(ALL_BADGES).length;
-  const foundCount = unlocked.size;
+  const foundCount = unlockedIds.length;
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-blue-50">
@@ -48,13 +51,18 @@ export default function Home() {
           <h1 className="text-6xl font-black text-gray-900 mb-4 tracking-tight">Random Stuff</h1>
           <RotatingTagline />
           {foundCount > 0 && (
-            <motion.div
+            <motion.button
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="mt-6 inline-flex items-center gap-2 bg-purple-100 text-purple-700 text-sm font-semibold px-4 py-2 rounded-full"
+              onClick={() => setShowBadges(true)}
+              className="mt-6 inline-flex items-center gap-2 bg-purple-100 hover:bg-purple-200 active:scale-95 text-purple-700 text-sm font-semibold px-4 py-2 rounded-full transition-all cursor-pointer"
             >
               <Medal size={14} /> {foundCount}/{totalBadges} secret badges found
-            </motion.div>
+            </motion.button>
+          )}
+
+          {showBadges && (
+            <BadgeModal unlockedIds={unlockedIds} onClose={() => setShowBadges(false)} />
           )}
         </div>
 
