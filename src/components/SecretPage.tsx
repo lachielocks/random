@@ -15,7 +15,7 @@ interface Props {
 }
 
 export function SecretPage({ badgeId, title, description, flavourText, bg }: Props) {
-  const { unlock, unlocked } = useBadges();
+  const { unlock, unlockedIds } = useBadges();
   const [show, setShow] = useState(false);
   // Capture whether the badge was already owned BEFORE we call unlock,
   // so "already found" vs "just found" is accurate on first render.
@@ -23,7 +23,7 @@ export function SecretPage({ badgeId, title, description, flavourText, bg }: Pro
   const badge = ALL_BADGES[badgeId];
 
   useEffect(() => {
-    alreadyHadRef.current = unlocked.has(badgeId);
+    alreadyHadRef.current = unlockedIds.includes(badgeId);
     unlock(badgeId);
     const id = setTimeout(() => setShow(true), 120);
     return () => clearTimeout(id);
