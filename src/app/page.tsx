@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import {
   ArrowRight, BookOpen, Brain, Terminal, Cookie, Dice6, Star,
-  MessageSquareWarning, Scroll, Waves, Medal, UserRound, Monitor, MousePointer, Bird,
+  MessageSquareWarning, Scroll, Waves, Medal, UserRound, Monitor, MousePointer, Bird, Wheat,
 } from "lucide-react";
 import { RotatingTagline } from "@/components/RotatingTagline";
 import { BadgeModal } from "@/components/BadgeModal";
@@ -25,6 +25,7 @@ const tools = [
   { href: "/loading",   Icon: Monitor,             title: "Fake OS Screens",         description: "Windows updates, BSODs, macOS, Ubuntu, BIOS. All fake. Very convincing.", color: "from-gray-600 to-gray-900", bg: "bg-gray-50 hover:bg-gray-100",     border: "border-gray-200"   },
   { href: "/button",    Icon: MousePointer,        title: "Find the Invisible Button", description: "The whole page is blank. There's a button somewhere. Good luck.", color: "from-rose-400 to-pink-600",   bg: "bg-rose-50 hover:bg-rose-100",     border: "border-rose-200"   },
   { href: "/duck",      Icon: Bird,                title: "Duck Cam",                description: "Not a real camera. Just ducks. They change occasionally.",          color: "from-sky-400 to-blue-500",       bg: "bg-sky-50 hover:bg-sky-100",       border: "border-sky-200"    },
+  { href: "/bread",     Icon: Wheat,               title: "Almighty Bread",          description: "The bread falling over GIF. And many more. All hail bread.",         color: "from-amber-400 to-orange-500",   bg: "bg-amber-50 hover:bg-amber-100",   border: "border-amber-200"  },
 ];
 
 const cardVariants = {
