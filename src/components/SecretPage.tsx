@@ -15,22 +15,25 @@ interface Props {
 }
 
 export function SecretPage({ badgeId, title, description, flavourText, bg }: Props) {
-  const { unlock, unlockedIds } = useBadges();
+  const { unlock, has, hydrated } = useBadges();
   const [show, setShow] = useState(false);
-  // Capture whether the badge was already owned BEFORE we call unlock,
-  // so "already found" vs "just found" is accurate on first render.
-  const alreadyHadRef = useRef<boolean | null>(null);
+  const [isNew, setIsNew] = useState(false);
+  const unlockedRef = useRef(false);
   const badge = ALL_BADGES[badgeId];
 
   useEffect(() => {
-    alreadyHadRef.current = unlockedIds.includes(badgeId);
-    unlock(badgeId);
     const id = setTimeout(() => setShow(true), 120);
     return () => clearTimeout(id);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const alreadyHad = alreadyHadRef.current ?? false;
+  useEffect(() => {
+    if (!hydrated || unlockedRef.current) return;
+    unlockedRef.current = true;
+    const wasNew = unlock(badgeId);
+    setIsNew(wasNew);
+  }, [hydrated, unlock, badgeId]);
+
+  const alreadyHad = hydrated && has(badgeId) && !isNew;
 
   return (
     <main className={`min-h-screen ${bg} flex flex-col items-center justify-center px-6 py-16`}>

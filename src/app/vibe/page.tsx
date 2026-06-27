@@ -5,6 +5,7 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, Waves, RefreshCw } from "lucide-react";
 import { vibes } from "@/data/vibes";
+import { dailyPick, dailyIndex } from "@/lib/daily-seed";
 
 function getRandom(current: string) {
   const pool = vibes.filter((v) => v.vibe !== current);
@@ -20,10 +21,11 @@ const gradients = [
 ];
 
 export default function VibePage() {
-  const [data, setData] = useState(() => vibes[Math.floor(Math.random() * vibes.length)]);
+  const [data, setData] = useState(() => dailyPick(vibes, "vibe"));
   const [key, setKey] = useState(0);
-  const [gradientIdx, setGradientIdx] = useState(0);
+  const [gradientIdx, setGradientIdx] = useState(() => dailyIndex(gradients.length, "vibe-grad"));
   const [checked, setChecked] = useState(false);
+  const [isDaily, setIsDaily] = useState(true);
 
   const check = useCallback(() => {
     setChecked(true);
@@ -34,6 +36,7 @@ export default function VibePage() {
     setKey((k) => k + 1);
     setGradientIdx((i) => (i + 1) % gradients.length);
     setChecked(false);
+    setIsDaily(false);
     setTimeout(() => setChecked(true), 50);
   }, []);
 
@@ -51,7 +54,9 @@ export default function VibePage() {
             <span className="text-xs font-bold text-pink-500 tracking-widest uppercase">Today&apos;s Forecast</span>
           </div>
           <h1 className="text-4xl sm:text-5xl font-black text-gray-900 mb-3 tracking-tight">Vibe Checker</h1>
-          <p className="text-gray-500 mb-12 text-lg">{vibes.length} vibes. One of them is yours.</p>
+          <p className="text-gray-500 mb-12 text-lg">
+            {vibes.length} vibes. {isDaily && <span className="text-pink-600 font-semibold">Today&apos;s vibe is shared globally.</span>}
+          </p>
 
           <AnimatePresence mode="wait">
             {!checked ? (

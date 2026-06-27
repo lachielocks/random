@@ -21,32 +21,64 @@ const DUCK_MESSAGES = [
   "*ruffles feathers aggressively*", "quaaaack.",
 ];
 
+const COUNCIL_MESSAGES = [
+  "CLASSIFIED: Council meeting in progress. Quack quietly.",
+  "The Council has convened. Your presence has been noted.",
+  "TOP SECRET: Bread orientation discussed. Verdict: upright.",
+  "Council decree: more clicks required. Visit /championship.",
+];
+
 export default function DuckPage() {
   const [duck, setDuck] = useState<DuckData | null>(null);
   const [loading, setLoading] = useState(true);
   const [count, setCount] = useState(0);
   const [key, setKey] = useState(0);
+  const [councilMode, setCouncilMode] = useState(false);
+  const [soundOn, setSoundOn] = useState(false);
+
+  const quack = useCallback(() => {
+    if (!soundOn) return;
+    try {
+      const ctx = new AudioContext();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.frequency.value = 300 + Math.random() * 200;
+      osc.type = "sawtooth";
+      gain.gain.value = 0.1;
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15);
+      osc.stop(ctx.currentTime + 0.15);
+    } catch {
+      // audio not available
+    }
+  }, [soundOn]);
 
   const loadDuck = useCallback(async () => {
     setLoading(true);
+    const isCouncil = Math.random() < 0.08;
+    setCouncilMode(isCouncil);
     try {
       const res = await fetch("https://random-d.uk/api/v2/random");
       const data = await res.json();
       setDuck({
         url: data.url,
-        message: DUCK_MESSAGES[Math.floor(Math.random() * DUCK_MESSAGES.length)],
+        message: isCouncil
+          ? COUNCIL_MESSAGES[Math.floor(Math.random() * COUNCIL_MESSAGES.length)]
+          : DUCK_MESSAGES[Math.floor(Math.random() * DUCK_MESSAGES.length)],
       });
       setCount((c) => c + 1);
       setKey((k) => k + 1);
+      quack();
     } catch {
-      // Fallback if API fails
       setDuck({
         url: `https://random-d.uk/api/v1/random?t=${Date.now()}`,
         message: DUCK_MESSAGES[Math.floor(Math.random() * DUCK_MESSAGES.length)],
       });
     }
     setLoading(false);
-  }, []);
+  }, [quack]);
 
   // Load on mount and auto-refresh every 8s
   useEffect(() => {
@@ -156,7 +188,18 @@ export default function DuckPage() {
             >
               🦆 Next Duck
             </motion.button>
+            <button
+              onClick={() => setSoundOn((s) => !s)}
+              className={`text-sm font-bold px-4 py-3 rounded-2xl border-2 transition-colors ${soundOn ? "bg-sky-100 border-sky-300 text-sky-700" : "bg-white border-gray-200 text-gray-400"}`}
+            >
+              {soundOn ? "🔊 Quack ON" : "🔇 Quack OFF"}
+            </button>
           </div>
+          {councilMode && (
+            <p className="mt-4 text-xs font-bold text-red-500 uppercase tracking-widest animate-pulse">
+              ⚠ Council footage detected
+            </p>
+          )}
           <p className="mt-4 text-xs text-gray-400 italic">Auto-refreshes every 8 seconds. Ducks provided by random-d.uk.</p>
         </div>
       </div>

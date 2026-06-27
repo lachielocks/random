@@ -5,6 +5,7 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, Lightbulb, Shuffle, Clipboard, ClipboardCheck } from "lucide-react";
 import { facts } from "@/data/facts";
+import { dailyPick } from "@/lib/daily-seed";
 
 function getRandom(current: string): string {
   const pool = facts.filter((f) => f !== current);
@@ -12,13 +13,15 @@ function getRandom(current: string): string {
 }
 
 export default function FactsPage() {
-  const [fact, setFact] = useState(() => facts[Math.floor(Math.random() * facts.length)]);
+  const [fact, setFact] = useState(() => dailyPick(facts, "fact"));
   const [key, setKey] = useState(0);
   const [copied, setCopied] = useState(false);
+  const [isDaily, setIsDaily] = useState(true);
 
   const next = useCallback(() => {
     setFact((prev) => getRandom(prev));
     setKey((k) => k + 1);
+    setIsDaily(false);
   }, []);
 
   const copy = useCallback(() => {
@@ -46,6 +49,7 @@ export default function FactsPage() {
           <p className="text-gray-500 mb-12 text-lg">
             Things that are true. Things you didn&apos;t need to know.{" "}
             <span className="text-gray-400 text-base">{facts.length} facts waiting.</span>
+            {isDaily && <span className="block text-blue-600 font-semibold text-base mt-1">Today&apos;s fact is the same for everyone. The Council approves.</span>}
           </p>
 
           {/* Fact card */}

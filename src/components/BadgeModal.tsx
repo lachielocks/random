@@ -79,8 +79,11 @@ export function BadgeModal({ unlockedIds, onClose }: Props) {
 
           {unlockedIds.length < badges.length && (
             <div className="px-6 py-4 bg-purple-50 border-t-2 border-purple-100">
-              <p className="text-xs text-purple-500 text-center font-medium">
-                Hint: there are hidden pages somewhere on this site.
+              <p className="text-xs text-purple-500 text-center font-medium mb-2">
+                Hints: type &ldquo;duck&rdquo; on the homepage · ↑↑↓↓←→←→BA · visit every tool · try /definitely-404
+              </p>
+              <p className="text-xs text-purple-400 text-center">
+                Terminal: type &ldquo;ducks&rdquo; or &ldquo;bread&rdquo; · Find the invisible button fast · Spin roulette 5×
               </p>
             </div>
           )}

@@ -129,7 +129,8 @@ const FS: Record<string, string> = {
   "passwords_definitely_not_real.txt": "facebook: password\ngmail: password1\nwork: Password1!\nnhs: password\nbank: iloveyou\n\n(These are not real. Hopefully.)",
   "penguin_army_plans.docx": "PENGUIN ARMY — STRATEGIC OVERVIEW\n\nPhase 1: Infiltrate the fish supply chain.\nPhase 2: ???\nPhase 3: Global waddling dominance.\n\nTimeline: Ongoing.",
   "mainframe_access.sh": "#!/bin/bash\n# Definitely accesses the mainframe\necho 'Accessing mainframe...'\nsleep 3\necho 'Just kidding, it\\'s a script that does nothing.'",
-  ".bash_history": "sudo rm -rf /\nls\nls -la\ncd ..\npwd\ncat classified.txt\ngoogle how to hack\ngoogle is hacking illegal\nclear",
+  "council_memo.txt": "COUNCIL OF DUCKS — INTERNAL MEMO\n\nRe: Bread orientation\nStatus: Ongoing concern\n\nThe cheese database has been compromised.\nVisit /the-council-of-ducks for initiation.\n\nQuack.",
+  ".bash_history": "sudo rm -rf /\nls\nls -la\ncd ..\npwd\ncat classified.txt\nducks\nbread\ngoogle how to hack\ngoogle is hacking illegal\nclear",
 };
 
 const PROCESSES = [
@@ -169,6 +170,8 @@ function processCommand(cmd: string, cwd: string, setCwd: (d: string) => void): 
         { type: "output", text: "  history      command history" },
         { type: "output", text: "  clear        clear terminal" },
         { type: "output", text: "  exit         exit terminal" },
+        { type: "info",   text: "  ducks        contact the council" },
+        { type: "info",   text: "  bread        hail bread" },
       ];
 
     case "whoami":
@@ -321,6 +324,24 @@ function processCommand(cmd: string, cwd: string, setCwd: (d: string) => void): 
         { type: "output", text: "(nothing actually happened. sorry.)" },
       ];
 
+    case "ducks":
+      return [
+        { type: "success", text: "CONTACTING COUNCIL OF DUCKS..." },
+        { type: "output", text: "Signal established. Quack quack." },
+        { type: "output", text: "Council says: visit /the-council-of-ducks" },
+        { type: "output", text: "Also try /duck for live surveillance footage." },
+        { type: "info",   text: ">>> SECRET COMMAND DISCOVERED <<<" },
+      ];
+
+    case "bread":
+      return [
+        { type: "success", text: "ALL HAIL BREAD" },
+        { type: "output", text: "Bread orientation: SUBOPTIMAL" },
+        { type: "output", text: "Recommended action: visit /bread immediately" },
+        { type: "output", text: "The cheese database sends its regards." },
+        { type: "info",   text: ">>> SECRET COMMAND DISCOVERED <<<" },
+      ];
+
     case "man": {
       const topic = args[0];
       if (!topic) return [{ type: "error", text: "What manual page do you want?" }];
@@ -357,6 +378,23 @@ function TerminalMode() {
   const [cwd, setCwd] = useState("~");
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const secretFound = useRef(false);
+
+  // Badge unlock for secret commands
+  const checkSecrets = useCallback((cmd: string) => {
+    const c = cmd.trim().toLowerCase();
+    if (["ducks", "bread"].includes(c) && !secretFound.current) {
+      secretFound.current = true;
+      // unlock via window event — TerminalMode can't easily use hook without making whole thing client
+      try {
+        const stored: string[] = JSON.parse(localStorage.getItem("random-stuff-badges") ?? "[]");
+        if (!stored.includes("terminal-secrets")) {
+          localStorage.setItem("random-stuff-badges", JSON.stringify([...stored, "terminal-secrets"]));
+          window.dispatchEvent(new CustomEvent("badge-unlock", { detail: "terminal-secrets" }));
+        }
+      } catch { /* ignore */ }
+    }
+  }, []);
 
   useEffect(() => { bottomRef.current?.scrollIntoView({ behavior: "smooth" }); }, [history]);
   useEffect(() => { inputRef.current?.focus(); }, []);
@@ -369,6 +407,7 @@ function TerminalMode() {
     ]);
 
     if (cmd) {
+      checkSecrets(cmd);
       setCmdHistory((h) => [cmd, ...h.slice(0, 49)]);
       const results = processCommand(cmd, cwd, setCwd);
 
@@ -381,7 +420,7 @@ function TerminalMode() {
 
     setInput("");
     setHistIdx(-1);
-  }, [input, cwd]);
+  }, [input, cwd, checkSecrets]);
 
   const handleKey = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") { submit(); return; }

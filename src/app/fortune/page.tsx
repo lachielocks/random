@@ -5,6 +5,7 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, Cookie, Shuffle, Clipboard, ClipboardCheck } from "lucide-react";
 import { fortunes } from "@/data/fortunes";
+import { dailyPick } from "@/lib/daily-seed";
 
 function getRandom(current: string) {
   const pool = fortunes.filter((f) => f !== current);
@@ -12,10 +13,11 @@ function getRandom(current: string) {
 }
 
 export default function FortunePage() {
-  const [fortune, setFortune] = useState(() => fortunes[Math.floor(Math.random() * fortunes.length)]);
+  const [fortune, setFortune] = useState(() => dailyPick(fortunes, "fortune"));
   const [key, setKey] = useState(0);
   const [cracked, setCracked] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [isDaily, setIsDaily] = useState(true);
 
   const crack = useCallback(() => {
     setCracked(true);
@@ -25,6 +27,7 @@ export default function FortunePage() {
     setFortune((prev) => getRandom(prev));
     setKey((k) => k + 1);
     setCracked(false);
+    setIsDaily(false);
     setTimeout(() => setCracked(true), 50);
   }, []);
 
@@ -49,7 +52,9 @@ export default function FortunePage() {
             <span className="text-xs font-bold text-amber-500 tracking-widest uppercase">Wisdom Awaits</span>
           </div>
           <h1 className="text-4xl sm:text-5xl font-black text-gray-900 mb-3 tracking-tight">Fortune Cookie Machine</h1>
-          <p className="text-gray-500 mb-12 text-lg">{fortunes.length} fortunes. None of them are your fault.</p>
+          <p className="text-gray-500 mb-12 text-lg">
+            {fortunes.length} fortunes. {isDaily && <span className="text-amber-600 font-semibold">Today&apos;s fortune is the same for everyone.</span>}
+          </p>
 
           {/* Cookie */}
           <div className="mb-8">

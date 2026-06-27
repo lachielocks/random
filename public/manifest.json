@@ -1,0 +1,16 @@
+{
+  "name": "Random Stuff",
+  "short_name": "Random Stuff",
+  "description": "Silly tools, funny generators, and pointless diversions.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#faf5ff",
+  "theme_color": "#9333ea",
+  "icons": [
+    {
+      "src": "/icon",
+      "sizes": "32x32",
+      "type": "image/png"
+    }
+  ]
+}
