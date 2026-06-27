@@ -128,11 +128,11 @@ export function HomeExtras() {
           onClick={() => setWorseDark((d) => !d)}
           className={`flex items-center justify-center gap-2 font-bold px-5 py-3 rounded-2xl border-2 transition-colors ${
             worseDark
-              ? "bg-gray-900 text-yellow-300 border-yellow-500 animate-pulse"
+              ? "bg-purple-900 text-yellow-300 border-yellow-500 animate-pulse"
               : "bg-white border-gray-200 hover:border-gray-400 text-gray-700"
           }`}
         >
-          <Moon size={18} /> {worseDark ? `Worse Dark (${30 - worseDarkSecs}s)` : "Worse Dark Mode"}
+          <Moon size={18} /> {worseDark ? `Worse Dark (${30 - worseDarkSecs}s)` : "Worse Dark Mode (cursed)"}
         </motion.button>
       </div>
 

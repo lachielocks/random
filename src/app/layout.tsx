@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { BadgeProvider } from "@/context/BadgeContext";
+import { ThemeProvider } from "@/context/ThemeContext";
 import { BadgeNotification } from "@/components/BadgeNotification";
 import { VisitTracker } from "@/components/VisitTracker";
 import { PWAInstall } from "@/components/PWAInstall";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 export const metadata: Metadata = {
   title: "Random Stuff",
@@ -22,14 +24,24 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-full antialiased">
+    <html lang="en" className="h-full antialiased" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem("random-stuff-theme");if(t==="dark"||(!t&&window.matchMedia("(prefers-color-scheme: dark)").matches)){document.documentElement.classList.add("dark")}}catch(e){}})();`,
+          }}
+        />
+      </head>
       <body className="min-h-full flex flex-col">
-        <BadgeProvider>
-          <VisitTracker />
-          {children}
-          <BadgeNotification />
-          <PWAInstall />
-        </BadgeProvider>
+        <ThemeProvider>
+          <BadgeProvider>
+            <VisitTracker />
+            {children}
+            <ThemeToggle />
+            <BadgeNotification />
+            <PWAInstall />
+          </BadgeProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
